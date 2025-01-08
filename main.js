@@ -51,13 +51,15 @@ function main() {
                     db.serialize(() => {
                         const createTableQuery = `CREATE TABLE IF NOT EXISTS ${tableName} (${Object.keys(headers).map((key) => `${key} ${headers[key]}`).join(', ')})`;
                         db.run(createTableQuery);
-                        const stmt = db.prepare(`INSERT INTO ${tableName} VALUES (?, ?, ?, ?)`);
+                        const prepareValues = Object.keys(headers).map((_) => '?').join(',');
+                        const stmt = db.prepare(`INSERT INTO ${tableName} VALUES (${prepareValues})`);
                         results.forEach((data) => {
                             const insertData = [];
                             for (let i = 0; i < Object.keys(headers).length; i++) {
                                 insertData.push(data[Object.keys(headers)[i]]);
                             }
                             // console.log(data);
+                            // console.log(insertData);
                             stmt.run(insertData);
                         });
                         stmt.finalize();
