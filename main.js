@@ -51,6 +51,9 @@ function main() {
                     db.serialize(() => {
                         const createTableQuery = `CREATE TABLE IF NOT EXISTS ${tableName} (${Object.keys(headers).map((key) => `${key} ${headers[key]}`).join(', ')})`;
                         db.run(createTableQuery);
+                        const resetTableQuery = `TRUNCATE TABLE ${tableName} `;
+                        db.run(resetTableQuery);
+
                         const prepareValues = Object.keys(headers).map((_) => '?').join(',');
                         const stmt = db.prepare(`INSERT INTO ${tableName} VALUES (${prepareValues})`);
                         results.forEach((data) => {
