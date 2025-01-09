@@ -23,8 +23,6 @@ function main() {
     }
     // SQLiteデータベースを開く
     const db = new sqlite3.Database(sqliteFilePath);
-    // CSVファイルを読み込み、データを配列に格納
-    const results = [];
 
     // targetParentDir から csv ファイルを再帰的に取得
     const targetDirs = fs.readdirSync(targetParentDir, { withFileTypes: false });
@@ -43,6 +41,9 @@ function main() {
             if (!filePath.endsWith('.csv')) {
                 return;
             }
+            console.log(`Reading ${filePath}`);
+            // CSVファイルを読み込み、データを配列に格納
+            const results = [];
             fs.createReadStream(filePath)
                 .pipe(csv({ headers: Object.keys(headers) }))
                 .on('data', (data) => results.push(data))
@@ -58,8 +59,7 @@ function main() {
                             for (let i = 0; i < Object.keys(headers).length; i++) {
                                 insertData.push(data[Object.keys(headers)[i]]);
                             }
-                            // console.log(data);
-                            // console.log(insertData);
+                            // console.log(`Inserting ${insertData}`);
                             stmt.run(insertData);
                         });
                         stmt.finalize();
