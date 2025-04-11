@@ -12,6 +12,7 @@ const headers = {
     'play': 'INTEGER',
     'liveview': 'INTEGER',
     'posts': 'INTEGER',
+    'streaming': 'INTEGER',
 };
 // CSVファイルが入っているディレクトリ
 const targetParentDir = path.join(__dirname, 'youtube-find');
